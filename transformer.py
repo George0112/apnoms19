@@ -1,3 +1,7 @@
+import ffmpeg
+import numpy as np
+import os
+import time
 class transformer:
     def __init__(self, monitor):
         self.monitor = monitor
@@ -17,14 +21,17 @@ class transformer:
         self.monitor.insert('temporal', fps, execute_time, ratio)
         return (execute_time, ratio)
     def spatial(self, file, scale):
-        if scale < 0.25:
-            raise Exception("Invalid scale ration, should be larger than 0.25")
         size = os.path.getsize(file)
         start_time = time.time()
-        cmd = 'ffmpeg -i %s -vf "scale=iw*%1f:ih*%1f" -c:v libx264 -y output.mp4' %(file, scale, scale)
+        iw = int((2048*scale)-1) if int((2048*scale)%2)==1 else int((2048*scale))
+        ih = int((1536*scale)-1) if int((1536*scale)%2)==1 else int((1536*scale))
+        print(iw, ih)
+        cmd = 'ffmpeg -i %s -vf "scale=%d:%d" -c:v libx264 -y output.mp4 -pix_fmt yuvj422p' %(file, iw, ih)
         os.system(cmd)
         execute_time = time.time() - start_time
         ratio = os.path.getsize('output.mp4') / size
+        if execute_time < 1:
+            return 0
         self.monitor.insert('spatial', scale, execute_time, ratio)
         return (execute_time, ratio)
     def bitrate(self, file, bitrate):
@@ -39,3 +46,10 @@ class transformer:
         ratio = os.path.getsize('output.mp4') / size
         self.monitor.insert('bitrate', bitrate, execute_time, ratio)
         return (execute_time, ratio)
+    def bootstrap(self, file):
+        for i in range(1, 30, 1):
+            self.temporal(file, i)
+        for i in range(0.1, 9.9, 0.05):
+            self.spatial(file, i)
+        for i in range(1500000, 50000000, 5000):
+            self.bitrate(file, i)

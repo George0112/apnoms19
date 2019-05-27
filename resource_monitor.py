@@ -14,22 +14,14 @@ class resource_monitor:
         results = {}
 
         coeffs = np.polyfit(x, y, degree)
-
-         # Polynomial Coefficients
-        results['coef'] = coeffs.tolist()
-
-        # r-squared
-        p = np.poly1d(coeffs)
-        # fit values, and mean
-        yhat = p(x)                         # or [p(z) for z in x]
-        ybar = np.sum(y)/len(y)          # or sum(y)/len(y)
-        ssreg = np.sum((yhat-ybar)**2)   # or sum([ (yihat - ybar)**2 for yihat in yhat])
-        sstot = np.sum((y - ybar)**2)    # or sum([ (yi - ybar)**2 for yi in y])
-        results['r^2'] = ssreg / sstot
-
-        return results
+        return coeffs.tolist()
+    
     def predict(self):
         print(self.polyfit(self.time_data['temporal'][0], self.time_data['temporal'][1], 1))
+        print(self.polyfit(self.time_data['spatial'][0], self.time_data['spatial'][1], 1))
+        print(self.polyfit(self.time_data['bitrate'][0], self.time_data['bitrate'][1], 1))
+        
+    def plot(self):
         fig, axes = plt.subplots(3,1, figsize=[6.4, 12])
         
         axes[0].title.set_text('temporal')
