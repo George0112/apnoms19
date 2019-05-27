@@ -47,9 +47,9 @@ class transformer:
         self.monitor.insert('bitrate', bitrate, execute_time, ratio)
         return (execute_time, ratio)
     def bootstrap(self, file):
-        for i in range(1, 30, 1):
+        for i in range(1, 23, 2):
             self.temporal(file, i)
-        for i in np.arange(0.1, 9.9, 0.05):
+        for i in np.arange(0.1, 0.9, 0.1):
             self.spatial(file, i)
         for i in range(1500000, 50000000, 5000):
             self.bitrate(file, i)

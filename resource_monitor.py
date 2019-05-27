@@ -22,16 +22,27 @@ class resource_monitor:
         print(self.polyfit(self.time_data['bitrate'][0], self.time_data['bitrate'][1], 1))
         
     def plot(self):
-        fig, axes = plt.subplots(3,1, figsize=[6.4, 12])
+        fig, axes = plt.subplots(6,1, figsize=[6.4, 12])
         
-        axes[0].title.set_text('temporal')
+        axes[0].title.set_text('time: temporal')
         sns.regplot(np.array(self.time_data['temporal'][0]), np.array(self.time_data['temporal'][1])
                     , ax=axes[0], color='blue', order=1, ci=None, truncate=True)
-        axes[1].title.set_text('spatial')
+        axes[1].title.set_text('time: spatial')
         sns.regplot(np.array(self.time_data['spatial'][0]), np.array(self.time_data['spatial'][1])
                     , ax=axes[1], color='blue', order=1, ci=None, truncate=True)
-        axes[2].title.set_text('bitrate')
+        axes[2].title.set_text('time: bitrate')
         sns.regplot(np.array(self.time_data['bitrate'][0]), np.array(self.time_data['bitrate'][1])
+                    , ax=axes[2], color='blue', order=1, ci=None, truncate=True)
+
+
+        axes[0].title.set_text('size: temporal')
+        sns.regplot(np.array(self.size_data['temporal'][0]), np.array(self.size_data['temporal'][1])
+                    , ax=axes[0], color='blue', order=1, ci=None, truncate=True)
+        axes[1].title.set_text('size: spatial')
+        sns.regplot(np.array(self.size_data['spatial'][0]), np.array(self.size_data['spatial'][1])
+                    , ax=axes[1], color='blue', order=1, ci=None, truncate=True)
+        axes[2].title.set_text('size: bitrate')
+        sns.regplot(np.array(self.size_data['bitrate'][0]), np.array(self.size_data['bitrate'][1])
                     , ax=axes[2], color='blue', order=1, ci=None, truncate=True)
         return 0
     def insert(self, adaption_type, par, time, size):
