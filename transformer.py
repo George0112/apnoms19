@@ -49,7 +49,7 @@ class transformer:
     def bootstrap(self, file):
         for i in range(1, 30, 1):
             self.temporal(file, i)
-        for i in range(0.1, 9.9, 0.05):
+        for i in np.arange(0.1, 9.9, 0.05):
             self.spatial(file, i)
         for i in range(1500000, 50000000, 5000):
             self.bitrate(file, i)
