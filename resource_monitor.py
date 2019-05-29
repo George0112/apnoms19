@@ -1,6 +1,8 @@
 from matplotlib import pyplot as plt
 import seaborn as sns
 import numpy as np
+import csv
+
 class resource_monitor:
     def __init__(self, l):
         self.time_data = {'temporal': [[0 for i in range(l)], [0 for i in range(l)]], 'spatial': [[0 for i in range(l)], [0 for i in range(l)]], 'bitrate': [[0 for i in range(l)], [0 for i in range(l)]]}
@@ -55,3 +57,20 @@ class resource_monitor:
         self.truth_data[adaption_type][0][self.truth_iterator] = par
         self.truth_data[adaption_type][1][self.truth_iterator] = truth
         self.truth_iterator = (self.truth_iterator+1) % self.l
+        
+    def save(self):
+        lines = [
+            self.time_data['temporal'][0], self.time_data['temporal'][1],
+            self.time_data['spatial'][0], self.time_data['spatial'][1],
+            self.time_data['bitrate'][0], self.time_data['bitrate'][1],
+            self.size_data['temporal'][0], self.size_data['temporal'][1],
+            self.size_data['spatial'][0], self.size_data['spatial'][1],
+            self.size_data['bitrate'][0], self.size_data['bitrate'][1],
+            self.truth_data['temporal'][0], self.truth_data['temporal'][1],
+            self.truth_data['spatial'][0], self.truth_data['spatial'][1],
+            self.truth_data['bitrate'][0], self.truth_data['bitrate'][1],
+        ]
+        with open('monitor.csv', 'a') as writeFile:
+            writer = csv.writer(writeFile)
+            writer.writerows(lines)
+        writeFile.close()
