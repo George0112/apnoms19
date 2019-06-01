@@ -13,7 +13,7 @@ class transformer:
         (
             ffmpeg.input(file)
             .filter('fps', fps=fps, round='up')
-            .output('output.mp4')
+            .output('output.mp4', vcodec='libx265')
             .run(overwrite_output=True)
         )
         execute_time = time.time() - start_time
@@ -26,7 +26,7 @@ class transformer:
         iw = int((2048*scale)-1) if int((2048*scale)%2)==1 else int((2048*scale))
         ih = int((1536*scale)-1) if int((1536*scale)%2)==1 else int((1536*scale))
         print(iw, ih)
-        cmd = 'ffmpeg -i %s -vf "scale=%d:%d" -c:v libx264 -y output.mp4 -pix_fmt yuvj422p' %(file, iw, ih)
+        cmd = 'ffmpeg -i %s -vf "scale=%d:%d" -c:v libx265 -y output.mp4 -pix_fmt yuvj422p' %(file, iw, ih)
         os.system(cmd)
         execute_time = time.time() - start_time
         ratio = os.path.getsize('output.mp4') / size
@@ -39,7 +39,7 @@ class transformer:
         size = os.path.getsize(file)
         (
             ffmpeg.input(file) 
-            .output('output.mp4', video_bitrate=bitrate)
+            .output('output.mp4', video_bitrate=bitrate, vcodec='libx265')
             .run(overwrite_output=True)
         )
         execute_time = time.time() - start_time
@@ -49,7 +49,7 @@ class transformer:
     def bootstrap(self, file):
         for i in range(1, 20, 1):
             self.temporal(file, i)
-        for i in range(0.1, 0.9, 0.05):
+        for i in np.arange(0.1, 0.95, 0.05):
             self.spatial(file, i)
-        for i in range(1500000, 50000000, 5000):
+        for i in range(1000000, 2000000, 200000):
             self.bitrate(file, i)
